@@ -1,0 +1,11 @@
+one = []
+two = []
+three = []
+four = []
+five = [1,2,3,4]
+nine = [2, 3, 4, 5 ,6, 234, 324324, 1, 2,3,4,5,6]
+test = [1]
+
+print five
+print nine
+print test
