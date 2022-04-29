@@ -1,4 +1,10 @@
-#/bin/sh
+#!/bin/sh
+
+if [ "$1" = "" ] 
+then
+    echo "Usage: $0 <source>"
+    exit 1
+fi
 
 go run main.go "$1"
 nasm -f elf64 test.asm
