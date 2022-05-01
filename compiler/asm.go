@@ -1,4 +1,4 @@
-package parser
+package compiler
 
 var keyWords = [...]string{
 	"for",
