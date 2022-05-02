@@ -363,6 +363,15 @@ itoa:
     push r8 
     push r9 
 
+    ; check if possitive
+    cmp rdi, 0
+    jge itoa_no_sign
+    not rdi 
+    inc rdi                 ; quick change sign
+    inc rcx
+    mov [rsp+0x1c], byte '-'
+itoa_no_sign:
+
     ; get number of digits
     call log10
     mov rcx, rax

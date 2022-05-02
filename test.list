@@ -1,12 +1,18 @@
-one = []
-two = []
+one   = []
+two   = [5]
 three = []
-four = []
-five = [1,2,3,4]
-nine = [2, 3, 4, 5 ,6, 234, 324324, 1, 2,3,4,5,6]
-test = [1]
+four  = []
+five  = [1,2,3,4]
+nine  = [2, 5-10, 4, 5 ,6, 234, 324324, 1, 2,3,4,5,6]
+test  = [1,4]
 
-print five
-print nine
-print test
+func()
+
+five -> stdout
+
+stdout <- two
+stdout <- five
+stdout <- nine
+stdout <- test
+stdout <- three
 

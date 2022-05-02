@@ -34,30 +34,51 @@ FALSE: 'false';
 
 IDENT: [a-z]+;
 INT: [0-9]+;
-WHITESPACE: [ \r\n\t] -> skip;
+WHITESPACE: [ \r\t] -> skip;
 
-CONDITIONAL: (EQ|N_EQ|LTE|GTE);
+NL: '\n';
 
 // Rules
-start : expr* EOF;
-
-//stmt
-//    : IDENT '<-' expr # Send
-//    | expr '->' IDENT # RSend
-//    ;
-
-expr
-    : expr op=(MUL|DIV|SUB|ADD) expr # Calc
-    | INT                            # Number 
-    | IDENT                          # Variable
-    | listType                       # list
-    | LPAREN expr RPAREN             # Parenthesis
-    | IDENT ASSIGN listType          # Assign
-    | expr CONDITIONAL expr          # Comp
-    | BANG expr                      # Not
-    | expr QMARK expr COLON expr     # Cond
-    | IDENT '<-' expr # Send
+start
+    : line (NL line)* EOF
     ;
 
-exprList: expr ( COMMA expr )*;
-listType: LSQUARE ( exprList )? RSQUARE;
+line
+    : state*
+    | expr*
+    | NL
+    ;
+
+
+state
+    : IDENT LSEND IDENT # SendLeft
+    | IDENT RSEND IDENT # SendRight
+    | funcDec           # Declaration
+    ;
+
+expr
+    : expr op=(MUL|DIV) expr         # MulDiv
+    | expr op=(SUB|ADD) expr         # SubAdd
+    | expr op=(EQ|N_EQ|LTE|GTE) expr # Cond
+    | INT                            # Number 
+    | IDENT ASSIGN listType          # Assign
+
+    | IDENT                          # Variable
+//    | listType                       # list
+//    | LPAREN expr RPAREN             # Parenthesis
+//    | expr CONDITIONAL expr          # Comp
+//    | BANG expr                      # Not
+//    | expr QMARK expr COLON expr     # Cond
+    ;
+
+funcDec
+    : IDENT LPAREN ( exprList )? RPAREN
+    ;
+
+exprList
+    : expr ( COMMA expr )*
+    ;
+
+listType
+    : LSQUARE ( exprList )? RSQUARE
+    ;

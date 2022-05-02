@@ -351,7 +351,7 @@ get_by_idx:
     mov rax, [rdi + 1 + rsi*INTSIZ]
     ret
 
-;; void(struct list *l)
+;; void list_print(struct list *l)
 list_print:
     push rdi
     push rsi
@@ -381,6 +381,8 @@ list_print_loop:
     add rsi, 8
     mov rdi, [rsi]
     call itoa
+    test rax, rax
+    jz list_print_ret
 
     test rcx, rcx
     jz list_print_loop_end
@@ -418,7 +420,9 @@ list_print_loop_end:
     sub rdx, rsi
     mov al, SYS_WRITE
     syscall
+    jmp list_print_ret
 
+list_print_ret:
     leave
 
     pop r9
@@ -428,6 +432,171 @@ list_print_loop_end:
     pop rsi
     pop rdi
     ret
+
+
+;; void list_send_fd_L(struct list *l, int fd_L)
+list_send_fd_L:
+    push rdi
+    push rsi
+    push rdx
+    push rcx
+    push r8
+    push r9
+    push r11
+
+    mov r11, rsi
+    mov rsi, rdi
+    mov rcx, [rsi]
+
+    push rbp
+    mov rbp, rsp
+    mov r8, rcx
+    inc r8
+    imul r8, 20
+    sub rsp, 0x8*2
+    sub rsp, r8
+
+    ;; r8 = buf[l->len]
+    mov r8, rsp
+
+list_send_fd_L_loop:
+    add rsi, 8
+    mov rdi, [rsi]
+    call itoa
+    test rax, rax
+    jz list_send_fd_L_ret
+
+    test rcx, rcx
+    jz list_send_fd_L_loop_end
+
+    ; copy itoa result to stack
+list_send_fd_L_copy:
+    mov dl, [rax]
+    test dl, dl
+    jz list_send_fd_L_copy_end
+    mov [r8], dl
+    inc r8
+    inc rax
+    jmp list_send_fd_L_copy
+
+list_send_fd_L_copy_end:
+    dec rcx
+    test rcx, rcx
+    jz list_send_fd_L_loop_end
+    mov byte [r8], ' '
+    inc r8
+    jmp list_send_fd_L_loop
+
+list_send_fd_L_loop_end:
+    mov byte [r8], 0xa
+    inc r8
+
+    mov rdi, r11
+    xor rax, rax
+    mov rsi, rsp
+    mov rdx, r8
+    sub rdx, rsi
+    mov al, SYS_WRITE
+    syscall
+    jmp list_send_fd_L_ret
+
+list_send_fd_L_ret:
+    leave
+
+    pop r11
+    pop r9
+    pop r8
+    pop rcx
+    pop rdx
+    pop rsi
+    pop rdi
+    ret
+
+
+;; void list_send_fd_R(struct list *l, int fd_R)
+list_send_fd_R:
+    push rdi
+    push rsi
+    push rdx
+    push rcx
+    push r8
+    push r9
+    push r11
+
+    mov r11, rsi
+    mov rsi, rdi
+    mov rcx, [rsi]
+
+    push rbp
+    mov rbp, rsp
+    mov r8, rcx
+    inc r8
+    imul r8, 20
+    sub rsp, 0x8*2
+    sub rsp, r8
+
+    ;; r8 = buf[l->len]
+    mov r8, rsp
+
+    ;; rsi = &l->items[l->len]
+    mov r9, rcx
+    inc r9
+    imul r9, 8
+    add rsi, r9
+
+list_send_fd_R_loop:
+    sub rsi, 8
+    mov rdi, [rsi]
+    call itoa
+    test rax, rax
+    jz list_send_fd_R_ret
+
+    test rcx, rcx
+    jz list_send_fd_R_loop_end
+
+    ; copy itoa result to stack
+list_send_fd_R_copy:
+    mov dl, [rax]
+    test dl, dl
+    jz list_send_fd_R_copy_end
+    mov [r8], dl
+    inc r8
+    inc rax
+    jmp list_send_fd_R_copy
+
+list_send_fd_R_copy_end:
+    dec rcx
+    test rcx, rcx
+    jz list_send_fd_R_loop_end
+    mov byte [r8], ' '
+    inc r8
+    jmp list_send_fd_R_loop
+
+list_send_fd_R_loop_end:
+    mov byte [r8], 0xa
+    inc r8
+
+    mov rdi, r11
+    xor rax, rax
+    mov rsi, rsp
+    mov rdx, r8
+    sub rdx, rsi
+    mov al, SYS_WRITE
+    syscall
+    jmp list_send_fd_R_ret
+
+list_send_fd_R_ret:
+    leave
+
+    pop r11
+    pop r9
+    pop r8
+    pop rcx
+    pop rdx
+    pop rsi
+    pop rdi
+    ret
+
 
 ;; void free_list(struct list *l)
 free_list:

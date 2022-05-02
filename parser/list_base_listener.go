@@ -27,17 +27,35 @@ func (s *BaseListListener) EnterStart(ctx *StartContext) {}
 // ExitStart is called when production start is exited.
 func (s *BaseListListener) ExitStart(ctx *StartContext) {}
 
-// EnterParenthesis is called when production Parenthesis is entered.
-func (s *BaseListListener) EnterParenthesis(ctx *ParenthesisContext) {}
+// EnterLine is called when production line is entered.
+func (s *BaseListListener) EnterLine(ctx *LineContext) {}
 
-// ExitParenthesis is called when production Parenthesis is exited.
-func (s *BaseListListener) ExitParenthesis(ctx *ParenthesisContext) {}
+// ExitLine is called when production line is exited.
+func (s *BaseListListener) ExitLine(ctx *LineContext) {}
 
-// EnterNot is called when production Not is entered.
-func (s *BaseListListener) EnterNot(ctx *NotContext) {}
+// EnterSendLeft is called when production SendLeft is entered.
+func (s *BaseListListener) EnterSendLeft(ctx *SendLeftContext) {}
 
-// ExitNot is called when production Not is exited.
-func (s *BaseListListener) ExitNot(ctx *NotContext) {}
+// ExitSendLeft is called when production SendLeft is exited.
+func (s *BaseListListener) ExitSendLeft(ctx *SendLeftContext) {}
+
+// EnterSendRight is called when production SendRight is entered.
+func (s *BaseListListener) EnterSendRight(ctx *SendRightContext) {}
+
+// ExitSendRight is called when production SendRight is exited.
+func (s *BaseListListener) ExitSendRight(ctx *SendRightContext) {}
+
+// EnterDeclaration is called when production Declaration is entered.
+func (s *BaseListListener) EnterDeclaration(ctx *DeclarationContext) {}
+
+// ExitDeclaration is called when production Declaration is exited.
+func (s *BaseListListener) ExitDeclaration(ctx *DeclarationContext) {}
+
+// EnterSubAdd is called when production SubAdd is entered.
+func (s *BaseListListener) EnterSubAdd(ctx *SubAddContext) {}
+
+// ExitSubAdd is called when production SubAdd is exited.
+func (s *BaseListListener) ExitSubAdd(ctx *SubAddContext) {}
 
 // EnterCond is called when production Cond is entered.
 func (s *BaseListListener) EnterCond(ctx *CondContext) {}
@@ -57,35 +75,23 @@ func (s *BaseListListener) EnterNumber(ctx *NumberContext) {}
 // ExitNumber is called when production Number is exited.
 func (s *BaseListListener) ExitNumber(ctx *NumberContext) {}
 
+// EnterMulDiv is called when production MulDiv is entered.
+func (s *BaseListListener) EnterMulDiv(ctx *MulDivContext) {}
+
+// ExitMulDiv is called when production MulDiv is exited.
+func (s *BaseListListener) ExitMulDiv(ctx *MulDivContext) {}
+
 // EnterAssign is called when production Assign is entered.
 func (s *BaseListListener) EnterAssign(ctx *AssignContext) {}
 
 // ExitAssign is called when production Assign is exited.
 func (s *BaseListListener) ExitAssign(ctx *AssignContext) {}
 
-// EnterCalc is called when production Calc is entered.
-func (s *BaseListListener) EnterCalc(ctx *CalcContext) {}
+// EnterFuncDec is called when production funcDec is entered.
+func (s *BaseListListener) EnterFuncDec(ctx *FuncDecContext) {}
 
-// ExitCalc is called when production Calc is exited.
-func (s *BaseListListener) ExitCalc(ctx *CalcContext) {}
-
-// EnterList is called when production list is entered.
-func (s *BaseListListener) EnterList(ctx *ListContext) {}
-
-// ExitList is called when production list is exited.
-func (s *BaseListListener) ExitList(ctx *ListContext) {}
-
-// EnterSend is called when production Send is entered.
-func (s *BaseListListener) EnterSend(ctx *SendContext) {}
-
-// ExitSend is called when production Send is exited.
-func (s *BaseListListener) ExitSend(ctx *SendContext) {}
-
-// EnterComp is called when production Comp is entered.
-func (s *BaseListListener) EnterComp(ctx *CompContext) {}
-
-// ExitComp is called when production Comp is exited.
-func (s *BaseListListener) ExitComp(ctx *CompContext) {}
+// ExitFuncDec is called when production funcDec is exited.
+func (s *BaseListListener) ExitFuncDec(ctx *FuncDecContext) {}
 
 // EnterExprList is called when production exprList is entered.
 func (s *BaseListListener) EnterExprList(ctx *ExprListContext) {}

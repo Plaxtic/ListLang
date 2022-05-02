@@ -11,11 +11,20 @@ type ListListener interface {
 	// EnterStart is called when entering the start production.
 	EnterStart(c *StartContext)
 
-	// EnterParenthesis is called when entering the Parenthesis production.
-	EnterParenthesis(c *ParenthesisContext)
+	// EnterLine is called when entering the line production.
+	EnterLine(c *LineContext)
 
-	// EnterNot is called when entering the Not production.
-	EnterNot(c *NotContext)
+	// EnterSendLeft is called when entering the SendLeft production.
+	EnterSendLeft(c *SendLeftContext)
+
+	// EnterSendRight is called when entering the SendRight production.
+	EnterSendRight(c *SendRightContext)
+
+	// EnterDeclaration is called when entering the Declaration production.
+	EnterDeclaration(c *DeclarationContext)
+
+	// EnterSubAdd is called when entering the SubAdd production.
+	EnterSubAdd(c *SubAddContext)
 
 	// EnterCond is called when entering the Cond production.
 	EnterCond(c *CondContext)
@@ -26,20 +35,14 @@ type ListListener interface {
 	// EnterNumber is called when entering the Number production.
 	EnterNumber(c *NumberContext)
 
+	// EnterMulDiv is called when entering the MulDiv production.
+	EnterMulDiv(c *MulDivContext)
+
 	// EnterAssign is called when entering the Assign production.
 	EnterAssign(c *AssignContext)
 
-	// EnterCalc is called when entering the Calc production.
-	EnterCalc(c *CalcContext)
-
-	// EnterList is called when entering the list production.
-	EnterList(c *ListContext)
-
-	// EnterSend is called when entering the Send production.
-	EnterSend(c *SendContext)
-
-	// EnterComp is called when entering the Comp production.
-	EnterComp(c *CompContext)
+	// EnterFuncDec is called when entering the funcDec production.
+	EnterFuncDec(c *FuncDecContext)
 
 	// EnterExprList is called when entering the exprList production.
 	EnterExprList(c *ExprListContext)
@@ -50,11 +53,20 @@ type ListListener interface {
 	// ExitStart is called when exiting the start production.
 	ExitStart(c *StartContext)
 
-	// ExitParenthesis is called when exiting the Parenthesis production.
-	ExitParenthesis(c *ParenthesisContext)
+	// ExitLine is called when exiting the line production.
+	ExitLine(c *LineContext)
 
-	// ExitNot is called when exiting the Not production.
-	ExitNot(c *NotContext)
+	// ExitSendLeft is called when exiting the SendLeft production.
+	ExitSendLeft(c *SendLeftContext)
+
+	// ExitSendRight is called when exiting the SendRight production.
+	ExitSendRight(c *SendRightContext)
+
+	// ExitDeclaration is called when exiting the Declaration production.
+	ExitDeclaration(c *DeclarationContext)
+
+	// ExitSubAdd is called when exiting the SubAdd production.
+	ExitSubAdd(c *SubAddContext)
 
 	// ExitCond is called when exiting the Cond production.
 	ExitCond(c *CondContext)
@@ -65,20 +77,14 @@ type ListListener interface {
 	// ExitNumber is called when exiting the Number production.
 	ExitNumber(c *NumberContext)
 
+	// ExitMulDiv is called when exiting the MulDiv production.
+	ExitMulDiv(c *MulDivContext)
+
 	// ExitAssign is called when exiting the Assign production.
 	ExitAssign(c *AssignContext)
 
-	// ExitCalc is called when exiting the Calc production.
-	ExitCalc(c *CalcContext)
-
-	// ExitList is called when exiting the list production.
-	ExitList(c *ListContext)
-
-	// ExitSend is called when exiting the Send production.
-	ExitSend(c *SendContext)
-
-	// ExitComp is called when exiting the Comp production.
-	ExitComp(c *CompContext)
+	// ExitFuncDec is called when exiting the funcDec production.
+	ExitFuncDec(c *FuncDecContext)
 
 	// ExitExprList is called when exiting the exprList production.
 	ExitExprList(c *ExprListContext)
