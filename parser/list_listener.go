@@ -14,6 +14,12 @@ type ListListener interface {
 	// EnterLine is called when entering the line production.
 	EnterLine(c *LineContext)
 
+	// EnterStatExpr is called when entering the statExpr production.
+	EnterStatExpr(c *StatExprContext)
+
+	// EnterIterable is called when entering the iterable production.
+	EnterIterable(c *IterableContext)
+
 	// EnterSendLeft is called when entering the SendLeft production.
 	EnterSendLeft(c *SendLeftContext)
 
@@ -55,6 +61,12 @@ type ListListener interface {
 
 	// ExitLine is called when exiting the line production.
 	ExitLine(c *LineContext)
+
+	// ExitStatExpr is called when exiting the statExpr production.
+	ExitStatExpr(c *StatExprContext)
+
+	// ExitIterable is called when exiting the iterable production.
+	ExitIterable(c *IterableContext)
 
 	// ExitSendLeft is called when exiting the SendLeft production.
 	ExitSendLeft(c *SendLeftContext)

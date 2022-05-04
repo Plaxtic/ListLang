@@ -6,13 +6,14 @@ five  = [1,2,3,4]
 nine  = [2, 5-10, 4, 5 ,6, 234, 324324, 1, 2,3,4,5,6]
 test  = [1,4]
 
-func()
+fn newfunc: a, b {
+    
+}
 
-five -> stdout
+five -> Out
+nine -> Out
 
-stdout <- two
-stdout <- five
-stdout <- nine
-stdout <- test
-stdout <- three
+Out <- nine <- two <- In
+
+nine <- five
 

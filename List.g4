@@ -32,6 +32,9 @@ RSEND: '->';
 TRUE:  'true';
 FALSE: 'false';
 
+FUNC: 'fn';
+
+MACRO: [A-Z][a-z]+;
 IDENT: [a-z]+;
 INT: [0-9]+;
 WHITESPACE: [ \r\t] -> skip;
@@ -44,16 +47,25 @@ start
     ;
 
 line
-    : state*
-    | expr*
+    : statExpr*
     | NL
     ;
 
+statExpr
+    : state
+    | expr
+    ;
+
+iterable
+    : IDENT
+    | MACRO
+    | listType
+    ;
 
 state
-    : IDENT LSEND IDENT # SendLeft
-    | IDENT RSEND IDENT # SendRight
-    | funcDec           # Declaration
+    : iterable (LSEND iterable)+ # SendLeft
+    | iterable (RSEND iterable)+ # SendRight
+    | funcDec                    # Declaration
     ;
 
 expr
@@ -62,8 +74,8 @@ expr
     | expr op=(EQ|N_EQ|LTE|GTE) expr # Cond
     | INT                            # Number 
     | IDENT ASSIGN listType          # Assign
-
     | IDENT                          # Variable
+
 //    | listType                       # list
 //    | LPAREN expr RPAREN             # Parenthesis
 //    | expr CONDITIONAL expr          # Comp
@@ -72,7 +84,7 @@ expr
     ;
 
 funcDec
-    : IDENT LPAREN ( exprList )? RPAREN
+    : FUNC IDENT COLON ( exprList )? LBRACK (NL (statExpr)*)* RBRACK
     ;
 
 exprList

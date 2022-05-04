@@ -35,58 +35,73 @@ func listParserInit() {
 	staticData.literalNames = []string{
 		"", "'<'", "'>'", "'*'", "'/'", "'+'", "'-'", "'!'", "'='", "','", "'?'",
 		"':'", "'\"'", "'['", "']'", "'('", "')'", "'{'", "'}'", "'=='", "'!='",
-		"'<='", "'>='", "'<-'", "'->'", "'true'", "'false'", "", "", "", "'\\n'",
+		"'<='", "'>='", "'<-'", "'->'", "'true'", "'false'", "'fn'", "", "",
+		"", "", "'\\n'",
 	}
 	staticData.symbolicNames = []string{
 		"", "LT", "GT", "MUL", "DIV", "ADD", "SUB", "BANG", "ASSIGN", "COMMA",
 		"QMARK", "COLON", "QUOTE", "LSQUARE", "RSQUARE", "LPAREN", "RPAREN",
 		"LBRACK", "RBRACK", "EQ", "N_EQ", "LTE", "GTE", "LSEND", "RSEND", "TRUE",
-		"FALSE", "IDENT", "INT", "WHITESPACE", "NL",
+		"FALSE", "FUNC", "MACRO", "IDENT", "INT", "WHITESPACE", "NL",
 	}
 	staticData.ruleNames = []string{
-		"start", "line", "state", "expr", "funcDec", "exprList", "listType",
+		"start", "line", "statExpr", "iterable", "state", "expr", "funcDec",
+		"exprList", "listType",
 	}
 	staticData.predictionContextCache = antlr.NewPredictionContextCache()
 	staticData.serializedATN = []int32{
-		4, 1, 30, 92, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
-		4, 2, 5, 7, 5, 2, 6, 7, 6, 1, 0, 1, 0, 1, 0, 5, 0, 18, 8, 0, 10, 0, 12,
-		0, 21, 9, 0, 1, 0, 1, 0, 1, 1, 5, 1, 26, 8, 1, 10, 1, 12, 1, 29, 9, 1,
-		1, 1, 5, 1, 32, 8, 1, 10, 1, 12, 1, 35, 9, 1, 1, 1, 3, 1, 38, 8, 1, 1,
-		2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 3, 2, 47, 8, 2, 1, 3, 1, 3, 1, 3,
-		1, 3, 1, 3, 1, 3, 3, 3, 55, 8, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1,
-		3, 1, 3, 1, 3, 5, 3, 66, 8, 3, 10, 3, 12, 3, 69, 9, 3, 1, 4, 1, 4, 1, 4,
-		3, 4, 74, 8, 4, 1, 4, 1, 4, 1, 5, 1, 5, 1, 5, 5, 5, 81, 8, 5, 10, 5, 12,
-		5, 84, 9, 5, 1, 6, 1, 6, 3, 6, 88, 8, 6, 1, 6, 1, 6, 1, 6, 0, 1, 6, 7,
-		0, 2, 4, 6, 8, 10, 12, 0, 3, 1, 0, 3, 4, 1, 0, 5, 6, 1, 0, 19, 22, 99,
-		0, 14, 1, 0, 0, 0, 2, 37, 1, 0, 0, 0, 4, 46, 1, 0, 0, 0, 6, 54, 1, 0, 0,
-		0, 8, 70, 1, 0, 0, 0, 10, 77, 1, 0, 0, 0, 12, 85, 1, 0, 0, 0, 14, 19, 3,
-		2, 1, 0, 15, 16, 5, 30, 0, 0, 16, 18, 3, 2, 1, 0, 17, 15, 1, 0, 0, 0, 18,
-		21, 1, 0, 0, 0, 19, 17, 1, 0, 0, 0, 19, 20, 1, 0, 0, 0, 20, 22, 1, 0, 0,
-		0, 21, 19, 1, 0, 0, 0, 22, 23, 5, 0, 0, 1, 23, 1, 1, 0, 0, 0, 24, 26, 3,
-		4, 2, 0, 25, 24, 1, 0, 0, 0, 26, 29, 1, 0, 0, 0, 27, 25, 1, 0, 0, 0, 27,
-		28, 1, 0, 0, 0, 28, 38, 1, 0, 0, 0, 29, 27, 1, 0, 0, 0, 30, 32, 3, 6, 3,
-		0, 31, 30, 1, 0, 0, 0, 32, 35, 1, 0, 0, 0, 33, 31, 1, 0, 0, 0, 33, 34,
-		1, 0, 0, 0, 34, 38, 1, 0, 0, 0, 35, 33, 1, 0, 0, 0, 36, 38, 5, 30, 0, 0,
-		37, 27, 1, 0, 0, 0, 37, 33, 1, 0, 0, 0, 37, 36, 1, 0, 0, 0, 38, 3, 1, 0,
-		0, 0, 39, 40, 5, 27, 0, 0, 40, 41, 5, 23, 0, 0, 41, 47, 5, 27, 0, 0, 42,
-		43, 5, 27, 0, 0, 43, 44, 5, 24, 0, 0, 44, 47, 5, 27, 0, 0, 45, 47, 3, 8,
-		4, 0, 46, 39, 1, 0, 0, 0, 46, 42, 1, 0, 0, 0, 46, 45, 1, 0, 0, 0, 47, 5,
-		1, 0, 0, 0, 48, 49, 6, 3, -1, 0, 49, 55, 5, 28, 0, 0, 50, 51, 5, 27, 0,
-		0, 51, 52, 5, 8, 0, 0, 52, 55, 3, 12, 6, 0, 53, 55, 5, 27, 0, 0, 54, 48,
-		1, 0, 0, 0, 54, 50, 1, 0, 0, 0, 54, 53, 1, 0, 0, 0, 55, 67, 1, 0, 0, 0,
-		56, 57, 10, 6, 0, 0, 57, 58, 7, 0, 0, 0, 58, 66, 3, 6, 3, 7, 59, 60, 10,
-		5, 0, 0, 60, 61, 7, 1, 0, 0, 61, 66, 3, 6, 3, 6, 62, 63, 10, 4, 0, 0, 63,
-		64, 7, 2, 0, 0, 64, 66, 3, 6, 3, 5, 65, 56, 1, 0, 0, 0, 65, 59, 1, 0, 0,
-		0, 65, 62, 1, 0, 0, 0, 66, 69, 1, 0, 0, 0, 67, 65, 1, 0, 0, 0, 67, 68,
-		1, 0, 0, 0, 68, 7, 1, 0, 0, 0, 69, 67, 1, 0, 0, 0, 70, 71, 5, 27, 0, 0,
-		71, 73, 5, 15, 0, 0, 72, 74, 3, 10, 5, 0, 73, 72, 1, 0, 0, 0, 73, 74, 1,
-		0, 0, 0, 74, 75, 1, 0, 0, 0, 75, 76, 5, 16, 0, 0, 76, 9, 1, 0, 0, 0, 77,
-		82, 3, 6, 3, 0, 78, 79, 5, 9, 0, 0, 79, 81, 3, 6, 3, 0, 80, 78, 1, 0, 0,
-		0, 81, 84, 1, 0, 0, 0, 82, 80, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 11,
-		1, 0, 0, 0, 84, 82, 1, 0, 0, 0, 85, 87, 5, 13, 0, 0, 86, 88, 3, 10, 5,
-		0, 87, 86, 1, 0, 0, 0, 87, 88, 1, 0, 0, 0, 88, 89, 1, 0, 0, 0, 89, 90,
-		5, 14, 0, 0, 90, 13, 1, 0, 0, 0, 11, 19, 27, 33, 37, 46, 54, 65, 67, 73,
-		82, 87,
+		4, 1, 32, 121, 2, 0, 7, 0, 2, 1, 7, 1, 2, 2, 7, 2, 2, 3, 7, 3, 2, 4, 7,
+		4, 2, 5, 7, 5, 2, 6, 7, 6, 2, 7, 7, 7, 2, 8, 7, 8, 1, 0, 1, 0, 1, 0, 5,
+		0, 22, 8, 0, 10, 0, 12, 0, 25, 9, 0, 1, 0, 1, 0, 1, 1, 5, 1, 30, 8, 1,
+		10, 1, 12, 1, 33, 9, 1, 1, 1, 3, 1, 36, 8, 1, 1, 2, 1, 2, 3, 2, 40, 8,
+		2, 1, 3, 1, 3, 1, 3, 3, 3, 45, 8, 3, 1, 4, 1, 4, 1, 4, 4, 4, 50, 8, 4,
+		11, 4, 12, 4, 51, 1, 4, 1, 4, 1, 4, 4, 4, 57, 8, 4, 11, 4, 12, 4, 58, 1,
+		4, 3, 4, 62, 8, 4, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 3, 5, 70, 8, 5,
+		1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 5, 5, 81, 8, 5, 10,
+		5, 12, 5, 84, 9, 5, 1, 6, 1, 6, 1, 6, 1, 6, 3, 6, 90, 8, 6, 1, 6, 1, 6,
+		1, 6, 5, 6, 95, 8, 6, 10, 6, 12, 6, 98, 9, 6, 5, 6, 100, 8, 6, 10, 6, 12,
+		6, 103, 9, 6, 1, 6, 1, 6, 1, 7, 1, 7, 1, 7, 5, 7, 110, 8, 7, 10, 7, 12,
+		7, 113, 9, 7, 1, 8, 1, 8, 3, 8, 117, 8, 8, 1, 8, 1, 8, 1, 8, 0, 1, 10,
+		9, 0, 2, 4, 6, 8, 10, 12, 14, 16, 0, 3, 1, 0, 3, 4, 1, 0, 5, 6, 1, 0, 19,
+		22, 131, 0, 18, 1, 0, 0, 0, 2, 35, 1, 0, 0, 0, 4, 39, 1, 0, 0, 0, 6, 44,
+		1, 0, 0, 0, 8, 61, 1, 0, 0, 0, 10, 69, 1, 0, 0, 0, 12, 85, 1, 0, 0, 0,
+		14, 106, 1, 0, 0, 0, 16, 114, 1, 0, 0, 0, 18, 23, 3, 2, 1, 0, 19, 20, 5,
+		32, 0, 0, 20, 22, 3, 2, 1, 0, 21, 19, 1, 0, 0, 0, 22, 25, 1, 0, 0, 0, 23,
+		21, 1, 0, 0, 0, 23, 24, 1, 0, 0, 0, 24, 26, 1, 0, 0, 0, 25, 23, 1, 0, 0,
+		0, 26, 27, 5, 0, 0, 1, 27, 1, 1, 0, 0, 0, 28, 30, 3, 4, 2, 0, 29, 28, 1,
+		0, 0, 0, 30, 33, 1, 0, 0, 0, 31, 29, 1, 0, 0, 0, 31, 32, 1, 0, 0, 0, 32,
+		36, 1, 0, 0, 0, 33, 31, 1, 0, 0, 0, 34, 36, 5, 32, 0, 0, 35, 31, 1, 0,
+		0, 0, 35, 34, 1, 0, 0, 0, 36, 3, 1, 0, 0, 0, 37, 40, 3, 8, 4, 0, 38, 40,
+		3, 10, 5, 0, 39, 37, 1, 0, 0, 0, 39, 38, 1, 0, 0, 0, 40, 5, 1, 0, 0, 0,
+		41, 45, 5, 29, 0, 0, 42, 45, 5, 28, 0, 0, 43, 45, 3, 16, 8, 0, 44, 41,
+		1, 0, 0, 0, 44, 42, 1, 0, 0, 0, 44, 43, 1, 0, 0, 0, 45, 7, 1, 0, 0, 0,
+		46, 49, 3, 6, 3, 0, 47, 48, 5, 23, 0, 0, 48, 50, 3, 6, 3, 0, 49, 47, 1,
+		0, 0, 0, 50, 51, 1, 0, 0, 0, 51, 49, 1, 0, 0, 0, 51, 52, 1, 0, 0, 0, 52,
+		62, 1, 0, 0, 0, 53, 56, 3, 6, 3, 0, 54, 55, 5, 24, 0, 0, 55, 57, 3, 6,
+		3, 0, 56, 54, 1, 0, 0, 0, 57, 58, 1, 0, 0, 0, 58, 56, 1, 0, 0, 0, 58, 59,
+		1, 0, 0, 0, 59, 62, 1, 0, 0, 0, 60, 62, 3, 12, 6, 0, 61, 46, 1, 0, 0, 0,
+		61, 53, 1, 0, 0, 0, 61, 60, 1, 0, 0, 0, 62, 9, 1, 0, 0, 0, 63, 64, 6, 5,
+		-1, 0, 64, 70, 5, 30, 0, 0, 65, 66, 5, 29, 0, 0, 66, 67, 5, 8, 0, 0, 67,
+		70, 3, 16, 8, 0, 68, 70, 5, 29, 0, 0, 69, 63, 1, 0, 0, 0, 69, 65, 1, 0,
+		0, 0, 69, 68, 1, 0, 0, 0, 70, 82, 1, 0, 0, 0, 71, 72, 10, 6, 0, 0, 72,
+		73, 7, 0, 0, 0, 73, 81, 3, 10, 5, 7, 74, 75, 10, 5, 0, 0, 75, 76, 7, 1,
+		0, 0, 76, 81, 3, 10, 5, 6, 77, 78, 10, 4, 0, 0, 78, 79, 7, 2, 0, 0, 79,
+		81, 3, 10, 5, 5, 80, 71, 1, 0, 0, 0, 80, 74, 1, 0, 0, 0, 80, 77, 1, 0,
+		0, 0, 81, 84, 1, 0, 0, 0, 82, 80, 1, 0, 0, 0, 82, 83, 1, 0, 0, 0, 83, 11,
+		1, 0, 0, 0, 84, 82, 1, 0, 0, 0, 85, 86, 5, 27, 0, 0, 86, 87, 5, 29, 0,
+		0, 87, 89, 5, 11, 0, 0, 88, 90, 3, 14, 7, 0, 89, 88, 1, 0, 0, 0, 89, 90,
+		1, 0, 0, 0, 90, 91, 1, 0, 0, 0, 91, 101, 5, 17, 0, 0, 92, 96, 5, 32, 0,
+		0, 93, 95, 3, 4, 2, 0, 94, 93, 1, 0, 0, 0, 95, 98, 1, 0, 0, 0, 96, 94,
+		1, 0, 0, 0, 96, 97, 1, 0, 0, 0, 97, 100, 1, 0, 0, 0, 98, 96, 1, 0, 0, 0,
+		99, 92, 1, 0, 0, 0, 100, 103, 1, 0, 0, 0, 101, 99, 1, 0, 0, 0, 101, 102,
+		1, 0, 0, 0, 102, 104, 1, 0, 0, 0, 103, 101, 1, 0, 0, 0, 104, 105, 5, 18,
+		0, 0, 105, 13, 1, 0, 0, 0, 106, 111, 3, 10, 5, 0, 107, 108, 5, 9, 0, 0,
+		108, 110, 3, 10, 5, 0, 109, 107, 1, 0, 0, 0, 110, 113, 1, 0, 0, 0, 111,
+		109, 1, 0, 0, 0, 111, 112, 1, 0, 0, 0, 112, 15, 1, 0, 0, 0, 113, 111, 1,
+		0, 0, 0, 114, 116, 5, 13, 0, 0, 115, 117, 3, 14, 7, 0, 116, 115, 1, 0,
+		0, 0, 116, 117, 1, 0, 0, 0, 117, 118, 1, 0, 0, 0, 118, 119, 5, 14, 0, 0,
+		119, 17, 1, 0, 0, 0, 16, 23, 31, 35, 39, 44, 51, 58, 61, 69, 80, 82, 89,
+		96, 101, 111, 116,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -151,21 +166,25 @@ const (
 	ListParserRSEND      = 24
 	ListParserTRUE       = 25
 	ListParserFALSE      = 26
-	ListParserIDENT      = 27
-	ListParserINT        = 28
-	ListParserWHITESPACE = 29
-	ListParserNL         = 30
+	ListParserFUNC       = 27
+	ListParserMACRO      = 28
+	ListParserIDENT      = 29
+	ListParserINT        = 30
+	ListParserWHITESPACE = 31
+	ListParserNL         = 32
 )
 
 // ListParser rules.
 const (
 	ListParserRULE_start    = 0
 	ListParserRULE_line     = 1
-	ListParserRULE_state    = 2
-	ListParserRULE_expr     = 3
-	ListParserRULE_funcDec  = 4
-	ListParserRULE_exprList = 5
-	ListParserRULE_listType = 6
+	ListParserRULE_statExpr = 2
+	ListParserRULE_iterable = 3
+	ListParserRULE_state    = 4
+	ListParserRULE_expr     = 5
+	ListParserRULE_funcDec  = 6
+	ListParserRULE_exprList = 7
+	ListParserRULE_listType = 8
 )
 
 // IStartContext is an interface to support dynamic dispatch.
@@ -305,29 +324,29 @@ func (p *ListParser) Start() (localctx IStartContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(14)
+		p.SetState(18)
 		p.Line()
 	}
-	p.SetState(19)
+	p.SetState(23)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == ListParserNL {
 		{
-			p.SetState(15)
+			p.SetState(19)
 			p.Match(ListParserNL)
 		}
 		{
-			p.SetState(16)
+			p.SetState(20)
 			p.Line()
 		}
 
-		p.SetState(21)
+		p.SetState(25)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
 	{
-		p.SetState(22)
+		p.SetState(26)
 		p.Match(ListParserEOF)
 	}
 
@@ -372,20 +391,20 @@ func NewLineContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokin
 
 func (s *LineContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *LineContext) AllState() []IStateContext {
+func (s *LineContext) AllStatExpr() []IStatExprContext {
 	children := s.GetChildren()
 	len := 0
 	for _, ctx := range children {
-		if _, ok := ctx.(IStateContext); ok {
+		if _, ok := ctx.(IStatExprContext); ok {
 			len++
 		}
 	}
 
-	tst := make([]IStateContext, len)
+	tst := make([]IStatExprContext, len)
 	i := 0
 	for _, ctx := range children {
-		if t, ok := ctx.(IStateContext); ok {
-			tst[i] = t.(IStateContext)
+		if t, ok := ctx.(IStatExprContext); ok {
+			tst[i] = t.(IStatExprContext)
 			i++
 		}
 	}
@@ -393,11 +412,11 @@ func (s *LineContext) AllState() []IStateContext {
 	return tst
 }
 
-func (s *LineContext) State(i int) IStateContext {
+func (s *LineContext) StatExpr(i int) IStatExprContext {
 	var t antlr.RuleContext
 	j := 0
 	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IStateContext); ok {
+		if _, ok := ctx.(IStatExprContext); ok {
 			if j == i {
 				t = ctx.(antlr.RuleContext)
 				break
@@ -410,48 +429,7 @@ func (s *LineContext) State(i int) IStateContext {
 		return nil
 	}
 
-	return t.(IStateContext)
-}
-
-func (s *LineContext) AllExpr() []IExprContext {
-	children := s.GetChildren()
-	len := 0
-	for _, ctx := range children {
-		if _, ok := ctx.(IExprContext); ok {
-			len++
-		}
-	}
-
-	tst := make([]IExprContext, len)
-	i := 0
-	for _, ctx := range children {
-		if t, ok := ctx.(IExprContext); ok {
-			tst[i] = t.(IExprContext)
-			i++
-		}
-	}
-
-	return tst
-}
-
-func (s *LineContext) Expr(i int) IExprContext {
-	var t antlr.RuleContext
-	j := 0
-	for _, ctx := range s.GetChildren() {
-		if _, ok := ctx.(IExprContext); ok {
-			if j == i {
-				t = ctx.(antlr.RuleContext)
-				break
-			}
-			j++
-		}
-	}
-
-	if t == nil {
-		return nil
-	}
-
-	return t.(IExprContext)
+	return t.(IStatExprContext)
 }
 
 func (s *LineContext) NL() antlr.TerminalNode {
@@ -502,50 +480,305 @@ func (p *ListParser) Line() (localctx ILineContext) {
 		}
 	}()
 
-	p.SetState(37)
+	p.SetState(35)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 2, p.GetParserRuleContext()) {
 	case 1:
 		p.EnterOuterAlt(localctx, 1)
-		p.SetState(27)
+		p.SetState(31)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		for _la == ListParserIDENT {
+		for ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<ListParserLSQUARE)|(1<<ListParserFUNC)|(1<<ListParserMACRO)|(1<<ListParserIDENT)|(1<<ListParserINT))) != 0 {
 			{
-				p.SetState(24)
-				p.State()
+				p.SetState(28)
+				p.StatExpr()
 			}
 
-			p.SetState(29)
+			p.SetState(33)
 			p.GetErrorHandler().Sync(p)
 			_la = p.GetTokenStream().LA(1)
 		}
 
 	case 2:
 		p.EnterOuterAlt(localctx, 2)
-		p.SetState(33)
-		p.GetErrorHandler().Sync(p)
-		_la = p.GetTokenStream().LA(1)
-
-		for _la == ListParserIDENT || _la == ListParserINT {
-			{
-				p.SetState(30)
-				p.expr(0)
-			}
-
-			p.SetState(35)
-			p.GetErrorHandler().Sync(p)
-			_la = p.GetTokenStream().LA(1)
-		}
-
-	case 3:
-		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(36)
+			p.SetState(34)
 			p.Match(ListParserNL)
 		}
 
+	}
+
+	return localctx
+}
+
+// IStatExprContext is an interface to support dynamic dispatch.
+type IStatExprContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsStatExprContext differentiates from other interfaces.
+	IsStatExprContext()
+}
+
+type StatExprContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyStatExprContext() *StatExprContext {
+	var p = new(StatExprContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = ListParserRULE_statExpr
+	return p
+}
+
+func (*StatExprContext) IsStatExprContext() {}
+
+func NewStatExprContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *StatExprContext {
+	var p = new(StatExprContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = ListParserRULE_statExpr
+
+	return p
+}
+
+func (s *StatExprContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *StatExprContext) State() IStateContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStateContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStateContext)
+}
+
+func (s *StatExprContext) Expr() IExprContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IExprContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IExprContext)
+}
+
+func (s *StatExprContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *StatExprContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *StatExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(ListListener); ok {
+		listenerT.EnterStatExpr(s)
+	}
+}
+
+func (s *StatExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(ListListener); ok {
+		listenerT.ExitStatExpr(s)
+	}
+}
+
+func (p *ListParser) StatExpr() (localctx IStatExprContext) {
+	this := p
+	_ = this
+
+	localctx = NewStatExprContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 4, ListParserRULE_statExpr)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(39)
+	p.GetErrorHandler().Sync(p)
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 3, p.GetParserRuleContext()) {
+	case 1:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(37)
+			p.State()
+		}
+
+	case 2:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(38)
+			p.expr(0)
+		}
+
+	}
+
+	return localctx
+}
+
+// IIterableContext is an interface to support dynamic dispatch.
+type IIterableContext interface {
+	antlr.ParserRuleContext
+
+	// GetParser returns the parser.
+	GetParser() antlr.Parser
+
+	// IsIterableContext differentiates from other interfaces.
+	IsIterableContext()
+}
+
+type IterableContext struct {
+	*antlr.BaseParserRuleContext
+	parser antlr.Parser
+}
+
+func NewEmptyIterableContext() *IterableContext {
+	var p = new(IterableContext)
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(nil, -1)
+	p.RuleIndex = ListParserRULE_iterable
+	return p
+}
+
+func (*IterableContext) IsIterableContext() {}
+
+func NewIterableContext(parser antlr.Parser, parent antlr.ParserRuleContext, invokingState int) *IterableContext {
+	var p = new(IterableContext)
+
+	p.BaseParserRuleContext = antlr.NewBaseParserRuleContext(parent, invokingState)
+
+	p.parser = parser
+	p.RuleIndex = ListParserRULE_iterable
+
+	return p
+}
+
+func (s *IterableContext) GetParser() antlr.Parser { return s.parser }
+
+func (s *IterableContext) IDENT() antlr.TerminalNode {
+	return s.GetToken(ListParserIDENT, 0)
+}
+
+func (s *IterableContext) MACRO() antlr.TerminalNode {
+	return s.GetToken(ListParserMACRO, 0)
+}
+
+func (s *IterableContext) ListType() IListTypeContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IListTypeContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IListTypeContext)
+}
+
+func (s *IterableContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *IterableContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+func (s *IterableContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(ListListener); ok {
+		listenerT.EnterIterable(s)
+	}
+}
+
+func (s *IterableContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(ListListener); ok {
+		listenerT.ExitIterable(s)
+	}
+}
+
+func (p *ListParser) Iterable() (localctx IIterableContext) {
+	this := p
+	_ = this
+
+	localctx = NewIterableContext(p, p.GetParserRuleContext(), p.GetState())
+	p.EnterRule(localctx, 6, ListParserRULE_iterable)
+
+	defer func() {
+		p.ExitRule()
+	}()
+
+	defer func() {
+		if err := recover(); err != nil {
+			if v, ok := err.(antlr.RecognitionException); ok {
+				localctx.SetException(v)
+				p.GetErrorHandler().ReportError(p, v)
+				p.GetErrorHandler().Recover(p, v)
+			} else {
+				panic(err)
+			}
+		}
+	}()
+
+	p.SetState(44)
+	p.GetErrorHandler().Sync(p)
+
+	switch p.GetTokenStream().LA(1) {
+	case ListParserIDENT:
+		p.EnterOuterAlt(localctx, 1)
+		{
+			p.SetState(41)
+			p.Match(ListParserIDENT)
+		}
+
+	case ListParserMACRO:
+		p.EnterOuterAlt(localctx, 2)
+		{
+			p.SetState(42)
+			p.Match(ListParserMACRO)
+		}
+
+	case ListParserLSQUARE:
+		p.EnterOuterAlt(localctx, 3)
+		{
+			p.SetState(43)
+			p.ListType()
+		}
+
+	default:
+		panic(antlr.NewNoViableAltException(p, nil, nil, nil, nil, nil))
 	}
 
 	return localctx
@@ -619,16 +852,53 @@ func (s *SendRightContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *SendRightContext) AllIDENT() []antlr.TerminalNode {
-	return s.GetTokens(ListParserIDENT)
+func (s *SendRightContext) AllIterable() []IIterableContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIterableContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIterableContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIterableContext); ok {
+			tst[i] = t.(IIterableContext)
+			i++
+		}
+	}
+
+	return tst
 }
 
-func (s *SendRightContext) IDENT(i int) antlr.TerminalNode {
-	return s.GetToken(ListParserIDENT, i)
+func (s *SendRightContext) Iterable(i int) IIterableContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIterableContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIterableContext)
 }
 
-func (s *SendRightContext) RSEND() antlr.TerminalNode {
-	return s.GetToken(ListParserRSEND, 0)
+func (s *SendRightContext) AllRSEND() []antlr.TerminalNode {
+	return s.GetTokens(ListParserRSEND)
+}
+
+func (s *SendRightContext) RSEND(i int) antlr.TerminalNode {
+	return s.GetToken(ListParserRSEND, i)
 }
 
 func (s *SendRightContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -707,16 +977,53 @@ func (s *SendLeftContext) GetRuleContext() antlr.RuleContext {
 	return s
 }
 
-func (s *SendLeftContext) AllIDENT() []antlr.TerminalNode {
-	return s.GetTokens(ListParserIDENT)
+func (s *SendLeftContext) AllIterable() []IIterableContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IIterableContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IIterableContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IIterableContext); ok {
+			tst[i] = t.(IIterableContext)
+			i++
+		}
+	}
+
+	return tst
 }
 
-func (s *SendLeftContext) IDENT(i int) antlr.TerminalNode {
-	return s.GetToken(ListParserIDENT, i)
+func (s *SendLeftContext) Iterable(i int) IIterableContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IIterableContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IIterableContext)
 }
 
-func (s *SendLeftContext) LSEND() antlr.TerminalNode {
-	return s.GetToken(ListParserLSEND, 0)
+func (s *SendLeftContext) AllLSEND() []antlr.TerminalNode {
+	return s.GetTokens(ListParserLSEND)
+}
+
+func (s *SendLeftContext) LSEND(i int) antlr.TerminalNode {
+	return s.GetToken(ListParserLSEND, i)
 }
 
 func (s *SendLeftContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -736,7 +1043,8 @@ func (p *ListParser) State() (localctx IStateContext) {
 	_ = this
 
 	localctx = NewStateContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 4, ListParserRULE_state)
+	p.EnterRule(localctx, 8, ListParserRULE_state)
+	var _la int
 
 	defer func() {
 		p.ExitRule()
@@ -754,46 +1062,66 @@ func (p *ListParser) State() (localctx IStateContext) {
 		}
 	}()
 
-	p.SetState(46)
+	p.SetState(61)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 4, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext()) {
 	case 1:
 		localctx = NewSendLeftContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
-			p.SetState(39)
-			p.Match(ListParserIDENT)
+			p.SetState(46)
+			p.Iterable()
 		}
-		{
-			p.SetState(40)
-			p.Match(ListParserLSEND)
-		}
-		{
-			p.SetState(41)
-			p.Match(ListParserIDENT)
+		p.SetState(49)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for ok := true; ok; ok = _la == ListParserLSEND {
+			{
+				p.SetState(47)
+				p.Match(ListParserLSEND)
+			}
+			{
+				p.SetState(48)
+				p.Iterable()
+			}
+
+			p.SetState(51)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
 		}
 
 	case 2:
 		localctx = NewSendRightContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
-			p.SetState(42)
-			p.Match(ListParserIDENT)
+			p.SetState(53)
+			p.Iterable()
 		}
-		{
-			p.SetState(43)
-			p.Match(ListParserRSEND)
-		}
-		{
-			p.SetState(44)
-			p.Match(ListParserIDENT)
+		p.SetState(56)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for ok := true; ok; ok = _la == ListParserRSEND {
+			{
+				p.SetState(54)
+				p.Match(ListParserRSEND)
+			}
+			{
+				p.SetState(55)
+				p.Iterable()
+			}
+
+			p.SetState(58)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
 		}
 
 	case 3:
 		localctx = NewDeclarationContext(p, localctx)
 		p.EnterOuterAlt(localctx, 3)
 		{
-			p.SetState(45)
+			p.SetState(60)
 			p.FuncDec()
 		}
 
@@ -1247,8 +1575,8 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 	localctx = NewExprContext(p, p.GetParserRuleContext(), _parentState)
 	var _prevctx IExprContext = localctx
 	var _ antlr.ParserRuleContext = _prevctx // TODO: To prevent unused variable warning.
-	_startState := 6
-	p.EnterRecursionRule(localctx, 6, ListParserRULE_expr, _p)
+	_startState := 10
+	p.EnterRecursionRule(localctx, 10, ListParserRULE_expr, _p)
 	var _la int
 
 	defer func() {
@@ -1270,16 +1598,16 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 	var _alt int
 
 	p.EnterOuterAlt(localctx, 1)
-	p.SetState(54)
+	p.SetState(69)
 	p.GetErrorHandler().Sync(p)
-	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 5, p.GetParserRuleContext()) {
+	switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 8, p.GetParserRuleContext()) {
 	case 1:
 		localctx = NewNumberContext(p, localctx)
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 
 		{
-			p.SetState(49)
+			p.SetState(64)
 			p.Match(ListParserINT)
 		}
 
@@ -1288,15 +1616,15 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(50)
+			p.SetState(65)
 			p.Match(ListParserIDENT)
 		}
 		{
-			p.SetState(51)
+			p.SetState(66)
 			p.Match(ListParserASSIGN)
 		}
 		{
-			p.SetState(52)
+			p.SetState(67)
 			p.ListType()
 		}
 
@@ -1305,15 +1633,15 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 		p.SetParserRuleContext(localctx)
 		_prevctx = localctx
 		{
-			p.SetState(53)
+			p.SetState(68)
 			p.Match(ListParserIDENT)
 		}
 
 	}
 	p.GetParserRuleContext().SetStop(p.GetTokenStream().LT(-1))
-	p.SetState(67)
+	p.SetState(82)
 	p.GetErrorHandler().Sync(p)
-	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext())
+	_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
 
 	for _alt != 2 && _alt != antlr.ATNInvalidAltNumber {
 		if _alt == 1 {
@@ -1321,19 +1649,19 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 				p.TriggerExitRuleEvent()
 			}
 			_prevctx = localctx
-			p.SetState(65)
+			p.SetState(80)
 			p.GetErrorHandler().Sync(p)
-			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 6, p.GetParserRuleContext()) {
+			switch p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 9, p.GetParserRuleContext()) {
 			case 1:
 				localctx = NewMulDivContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, ListParserRULE_expr)
-				p.SetState(56)
+				p.SetState(71)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 6)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 6)", ""))
 				}
 				{
-					p.SetState(57)
+					p.SetState(72)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -1351,20 +1679,20 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(58)
+					p.SetState(73)
 					p.expr(7)
 				}
 
 			case 2:
 				localctx = NewSubAddContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, ListParserRULE_expr)
-				p.SetState(59)
+				p.SetState(74)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 5)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 5)", ""))
 				}
 				{
-					p.SetState(60)
+					p.SetState(75)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -1382,20 +1710,20 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(61)
+					p.SetState(76)
 					p.expr(6)
 				}
 
 			case 3:
 				localctx = NewCondContext(p, NewExprContext(p, _parentctx, _parentState))
 				p.PushNewRecursionContext(localctx, _startState, ListParserRULE_expr)
-				p.SetState(62)
+				p.SetState(77)
 
 				if !(p.Precpred(p.GetParserRuleContext(), 4)) {
 					panic(antlr.NewFailedPredicateException(p, "p.Precpred(p.GetParserRuleContext(), 4)", ""))
 				}
 				{
-					p.SetState(63)
+					p.SetState(78)
 
 					var _lt = p.GetTokenStream().LT(1)
 
@@ -1413,16 +1741,16 @@ func (p *ListParser) expr(_p int) (localctx IExprContext) {
 					}
 				}
 				{
-					p.SetState(64)
+					p.SetState(79)
 					p.expr(5)
 				}
 
 			}
 
 		}
-		p.SetState(69)
+		p.SetState(84)
 		p.GetErrorHandler().Sync(p)
-		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 7, p.GetParserRuleContext())
+		_alt = p.GetInterpreter().AdaptivePredict(p.GetTokenStream(), 10, p.GetParserRuleContext())
 	}
 
 	return localctx
@@ -1466,16 +1794,24 @@ func NewFuncDecContext(parser antlr.Parser, parent antlr.ParserRuleContext, invo
 
 func (s *FuncDecContext) GetParser() antlr.Parser { return s.parser }
 
+func (s *FuncDecContext) FUNC() antlr.TerminalNode {
+	return s.GetToken(ListParserFUNC, 0)
+}
+
 func (s *FuncDecContext) IDENT() antlr.TerminalNode {
 	return s.GetToken(ListParserIDENT, 0)
 }
 
-func (s *FuncDecContext) LPAREN() antlr.TerminalNode {
-	return s.GetToken(ListParserLPAREN, 0)
+func (s *FuncDecContext) COLON() antlr.TerminalNode {
+	return s.GetToken(ListParserCOLON, 0)
 }
 
-func (s *FuncDecContext) RPAREN() antlr.TerminalNode {
-	return s.GetToken(ListParserRPAREN, 0)
+func (s *FuncDecContext) LBRACK() antlr.TerminalNode {
+	return s.GetToken(ListParserLBRACK, 0)
+}
+
+func (s *FuncDecContext) RBRACK() antlr.TerminalNode {
+	return s.GetToken(ListParserRBRACK, 0)
 }
 
 func (s *FuncDecContext) ExprList() IExprListContext {
@@ -1492,6 +1828,55 @@ func (s *FuncDecContext) ExprList() IExprListContext {
 	}
 
 	return t.(IExprListContext)
+}
+
+func (s *FuncDecContext) AllNL() []antlr.TerminalNode {
+	return s.GetTokens(ListParserNL)
+}
+
+func (s *FuncDecContext) NL(i int) antlr.TerminalNode {
+	return s.GetToken(ListParserNL, i)
+}
+
+func (s *FuncDecContext) AllStatExpr() []IStatExprContext {
+	children := s.GetChildren()
+	len := 0
+	for _, ctx := range children {
+		if _, ok := ctx.(IStatExprContext); ok {
+			len++
+		}
+	}
+
+	tst := make([]IStatExprContext, len)
+	i := 0
+	for _, ctx := range children {
+		if t, ok := ctx.(IStatExprContext); ok {
+			tst[i] = t.(IStatExprContext)
+			i++
+		}
+	}
+
+	return tst
+}
+
+func (s *FuncDecContext) StatExpr(i int) IStatExprContext {
+	var t antlr.RuleContext
+	j := 0
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(IStatExprContext); ok {
+			if j == i {
+				t = ctx.(antlr.RuleContext)
+				break
+			}
+			j++
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(IStatExprContext)
 }
 
 func (s *FuncDecContext) GetRuleContext() antlr.RuleContext {
@@ -1519,7 +1904,7 @@ func (p *ListParser) FuncDec() (localctx IFuncDecContext) {
 	_ = this
 
 	localctx = NewFuncDecContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 8, ListParserRULE_funcDec)
+	p.EnterRule(localctx, 12, ListParserRULE_funcDec)
 	var _la int
 
 	defer func() {
@@ -1540,27 +1925,63 @@ func (p *ListParser) FuncDec() (localctx IFuncDecContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(70)
+		p.SetState(85)
+		p.Match(ListParserFUNC)
+	}
+	{
+		p.SetState(86)
 		p.Match(ListParserIDENT)
 	}
 	{
-		p.SetState(71)
-		p.Match(ListParserLPAREN)
+		p.SetState(87)
+		p.Match(ListParserCOLON)
 	}
-	p.SetState(73)
+	p.SetState(89)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == ListParserIDENT || _la == ListParserINT {
 		{
-			p.SetState(72)
+			p.SetState(88)
 			p.ExprList()
 		}
 
 	}
 	{
-		p.SetState(75)
-		p.Match(ListParserRPAREN)
+		p.SetState(91)
+		p.Match(ListParserLBRACK)
+	}
+	p.SetState(101)
+	p.GetErrorHandler().Sync(p)
+	_la = p.GetTokenStream().LA(1)
+
+	for _la == ListParserNL {
+		{
+			p.SetState(92)
+			p.Match(ListParserNL)
+		}
+		p.SetState(96)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+
+		for ((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<ListParserLSQUARE)|(1<<ListParserFUNC)|(1<<ListParserMACRO)|(1<<ListParserIDENT)|(1<<ListParserINT))) != 0 {
+			{
+				p.SetState(93)
+				p.StatExpr()
+			}
+
+			p.SetState(98)
+			p.GetErrorHandler().Sync(p)
+			_la = p.GetTokenStream().LA(1)
+		}
+
+		p.SetState(103)
+		p.GetErrorHandler().Sync(p)
+		_la = p.GetTokenStream().LA(1)
+	}
+	{
+		p.SetState(104)
+		p.Match(ListParserRBRACK)
 	}
 
 	return localctx
@@ -1678,7 +2099,7 @@ func (p *ListParser) ExprList() (localctx IExprListContext) {
 	_ = this
 
 	localctx = NewExprListContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 10, ListParserRULE_exprList)
+	p.EnterRule(localctx, 14, ListParserRULE_exprList)
 	var _la int
 
 	defer func() {
@@ -1699,24 +2120,24 @@ func (p *ListParser) ExprList() (localctx IExprListContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(77)
+		p.SetState(106)
 		p.expr(0)
 	}
-	p.SetState(82)
+	p.SetState(111)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	for _la == ListParserCOMMA {
 		{
-			p.SetState(78)
+			p.SetState(107)
 			p.Match(ListParserCOMMA)
 		}
 		{
-			p.SetState(79)
+			p.SetState(108)
 			p.expr(0)
 		}
 
-		p.SetState(84)
+		p.SetState(113)
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 	}
@@ -1811,7 +2232,7 @@ func (p *ListParser) ListType() (localctx IListTypeContext) {
 	_ = this
 
 	localctx = NewListTypeContext(p, p.GetParserRuleContext(), p.GetState())
-	p.EnterRule(localctx, 12, ListParserRULE_listType)
+	p.EnterRule(localctx, 16, ListParserRULE_listType)
 	var _la int
 
 	defer func() {
@@ -1832,22 +2253,22 @@ func (p *ListParser) ListType() (localctx IListTypeContext) {
 
 	p.EnterOuterAlt(localctx, 1)
 	{
-		p.SetState(85)
+		p.SetState(114)
 		p.Match(ListParserLSQUARE)
 	}
-	p.SetState(87)
+	p.SetState(116)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
 	if _la == ListParserIDENT || _la == ListParserINT {
 		{
-			p.SetState(86)
+			p.SetState(115)
 			p.ExprList()
 		}
 
 	}
 	{
-		p.SetState(89)
+		p.SetState(118)
 		p.Match(ListParserRSQUARE)
 	}
 
@@ -1856,7 +2277,7 @@ func (p *ListParser) ListType() (localctx IListTypeContext) {
 
 func (p *ListParser) Sempred(localctx antlr.RuleContext, ruleIndex, predIndex int) bool {
 	switch ruleIndex {
-	case 3:
+	case 5:
 		var t *ExprContext = nil
 		if localctx != nil {
 			t = localctx.(*ExprContext)

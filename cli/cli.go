@@ -32,9 +32,7 @@ func (c *Cli) compile() {
 	)
 	antlr.ParseTreeWalkerDefault.Walk(c.Listener, p.Start())
 
-	c.Asm += c.Listener.AsmPrelude
-	c.Asm += c.Listener.AsmBody
-	c.Asm += c.Listener.AsmEpilogue
+	c.Asm += c.Listener.GetAsm()
 }
 
 func Run() {

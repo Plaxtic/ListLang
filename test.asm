@@ -131,21 +131,14 @@ main:
     mov rdi, [rbp + 0x30]
     mov rsi, 0x1
     call list_send_fd_R
-    mov rdi, [rbp + 0x18]
+    mov rdi, [rbp + 0x38]
     mov rsi, 0x1
-    call list_send_fd_L
-    mov rdi, [rbp + 0x30]
-    mov rsi, 0x1
-    call list_send_fd_L
+    call list_send_fd_R
     mov rdi, [rbp + 0x38]
     mov rsi, 0x1
     call list_send_fd_L
-    mov rdi, [rbp + 0x40]
-    mov rsi, 0x1
-    call list_send_fd_L
-    mov rdi, [rbp + 0x20]
-    mov rsi, 0x1
-    call list_send_fd_L
+    mov rdi, [rbp + 0x30]
+    call free_list
     mov rdi, [rbp + 0x38]
     call free_list
     mov rdi, [rbp + 0x40]
@@ -157,8 +150,6 @@ main:
     mov rdi, [rbp + 0x20]
     call free_list
     mov rdi, [rbp + 0x28]
-    call free_list
-    mov rdi, [rbp + 0x30]
     call free_list
     
     xor rax, rax

@@ -2,6 +2,7 @@ package compiler
 
 const (
 	QWordSize = 0x8
+	RetAndRpb = QWordSize * 2
 	Prelude   = `
 BITS 64
 
@@ -52,6 +53,9 @@ main:
     `
 	SendListR = `call list_send_fd_R
     `
+	StdIn  = 0
+	StdOut = 1
+	StdErr = 2
 )
 
 var keyWords = [...]string{
@@ -59,9 +63,9 @@ var keyWords = [...]string{
 }
 
 var fileDescriptors = map[string]int{
-	"stdin":  0,
-	"stdout": 1,
-	"stderr": 2,
+	"In":  0,
+	"Out": 1,
+	"Err": 2,
 }
 
 func isKeyWord(ident string) bool {
@@ -73,7 +77,7 @@ func isKeyWord(ident string) bool {
 	return false
 }
 
-func isConstFd(ident string) bool {
+func isFdMacro(ident string) bool {
 	if _, ok := fileDescriptors[ident]; ok {
 		return true
 	}

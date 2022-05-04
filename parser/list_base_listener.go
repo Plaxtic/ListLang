@@ -33,6 +33,18 @@ func (s *BaseListListener) EnterLine(ctx *LineContext) {}
 // ExitLine is called when production line is exited.
 func (s *BaseListListener) ExitLine(ctx *LineContext) {}
 
+// EnterStatExpr is called when production statExpr is entered.
+func (s *BaseListListener) EnterStatExpr(ctx *StatExprContext) {}
+
+// ExitStatExpr is called when production statExpr is exited.
+func (s *BaseListListener) ExitStatExpr(ctx *StatExprContext) {}
+
+// EnterIterable is called when production iterable is entered.
+func (s *BaseListListener) EnterIterable(ctx *IterableContext) {}
+
+// ExitIterable is called when production iterable is exited.
+func (s *BaseListListener) ExitIterable(ctx *IterableContext) {}
+
 // EnterSendLeft is called when production SendLeft is entered.
 func (s *BaseListListener) EnterSendLeft(ctx *SendLeftContext) {}
 
