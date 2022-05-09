@@ -45,7 +45,7 @@ func (l *ListListener) currFunk() *StackFrame {
 }
 
 func (l *ListListener) addArg(arg string) {
-	l.currFunk().Args[arg] = l.currFunk().StackSize + RetAndRpb
+	l.currFunk().Args[arg] = l.currFunk().StackSize
 	l.currFunk().StackSize += QWordSize
 }
 
@@ -58,15 +58,11 @@ func (l *ListListener) ExitArgs(c *parser.ArgsContext) {
 }
 
 func (l *ListListener) EnterFuncDec(c *parser.FuncDecContext) {
-	fmt.Println("EnterFuncDec")
-
 	funk := c.IDENT().GetText()
 	l.initFunk(funk)
 }
 
 func (l *ListListener) ExitFuncDec(c *parser.FuncDecContext) {
-	fmt.Println("ExitFuncDec")
-
 	curr := l.currFunk()
 	funk := c.IDENT().GetText()
 	curr.AsmPrelude = fmt.Sprintf(
