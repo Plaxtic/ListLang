@@ -89,7 +89,7 @@ expr
     ;
 
 ops: (MUL|DIV|SUB|ADD|MOD);
-comment: '//' ().*? ;         // shite
+comment: '//' ().*? ;
 
 args
     : exprList
