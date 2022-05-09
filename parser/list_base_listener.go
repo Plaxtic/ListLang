@@ -63,6 +63,12 @@ func (s *BaseListListener) EnterDeclaration(ctx *DeclarationContext) {}
 // ExitDeclaration is called when production Declaration is exited.
 func (s *BaseListListener) ExitDeclaration(ctx *DeclarationContext) {}
 
+// EnterReturn is called when production Return is entered.
+func (s *BaseListListener) EnterReturn(ctx *ReturnContext) {}
+
+// ExitReturn is called when production Return is exited.
+func (s *BaseListListener) ExitReturn(ctx *ReturnContext) {}
+
 // EnterSubAdd is called when production SubAdd is entered.
 func (s *BaseListListener) EnterSubAdd(ctx *SubAddContext) {}
 
@@ -122,6 +128,12 @@ func (s *BaseListListener) EnterFuncDec(ctx *FuncDecContext) {}
 
 // ExitFuncDec is called when production funcDec is exited.
 func (s *BaseListListener) ExitFuncDec(ctx *FuncDecContext) {}
+
+// EnterRet is called when production ret is entered.
+func (s *BaseListListener) EnterRet(ctx *RetContext) {}
+
+// ExitRet is called when production ret is exited.
+func (s *BaseListListener) ExitRet(ctx *RetContext) {}
 
 // EnterExprList is called when production exprList is entered.
 func (s *BaseListListener) EnterExprList(ctx *ExprListContext) {}

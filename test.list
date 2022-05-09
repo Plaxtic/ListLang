@@ -6,8 +6,21 @@ five  = [1,2,3,4]
 nine  = [2, 5-10, 4*2, 5 ,6, 123*234, 324324, 1, 2,3,4,5,6]
 test  = [1,4]
 
+// i want this to create a range 3-9
+// range = [3..9]
+
+// i want this to create a range 3-9, * 2
+// range = [a*2 <- 3..9]
+
+// i want this to create a range 3-9, * 2 if a%2
+// range = [a%2 ? a*2 <- 3..9]
+
+// this is a function that you can send to
+// it will apply to every item and produce a new list
+// if there is no ret, there will be no item
+// not a gap, just a shorter list
 fn minifunk: a {
-    a+1
+    ret a+1
 }
 
 // bad, want to be immutable

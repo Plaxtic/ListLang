@@ -10,6 +10,7 @@ func (l *ListListener) appendIntStack(numItems int) {
 	if numItems < 0 {
 		return
 	}
+
 	popInt := l.popInt()
 	l.appendIntStack(numItems - 1)
 	l.addToFunkBody(
@@ -18,15 +19,17 @@ func (l *ListListener) appendIntStack(numItems int) {
 }
 
 func (l *ListListener) fillListVar(name, listStr string) {
-	if listStr != "[]" {
-		l.addToFunkBody(
-			fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[name]),
-		)
-		l.appendIntStack(listLen(listStr))
-		l.addToFunkBody(
-			fmt.Sprintf(SaveRet, l.currFunk().VarStack[name]),
-		)
+	if listStr == "[]" {
+		return
 	}
+
+	l.addToFunkBody(
+		fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[name]),
+	)
+	l.appendIntStack(listLen(listStr))
+	l.addToFunkBody(
+		fmt.Sprintf(SaveRet, l.currFunk().VarStack[name]),
+	)
 }
 
 // leaves reference in rax and rdi

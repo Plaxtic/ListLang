@@ -107,13 +107,6 @@ func (l *ListListener) bothVarMulDiv(left, right string, opType int) {
 
 func (l *ListListener) leftVarMulDiv(left string, opType int) {
 
-	var varAddr uint
-	if l.inStack(left) {
-		varAddr = l.currFunk().VarStack[left]
-	} else {
-		varAddr = l.currFunk().Args[left]
-	}
-
 	var asmMacro string
 	switch opType {
 	case parser.ListParserMUL:
@@ -127,7 +120,7 @@ func (l *ListListener) leftVarMulDiv(left string, opType int) {
 	}
 	l.addToFunkBody(
 		fmt.Sprintf(asmMacro,
-			varAddr,
+			l.getVar(left),
 			l.popInt(),
 		),
 	)
@@ -149,7 +142,7 @@ func (l *ListListener) rightVarMulDiv(right string, opType int) {
 	l.addToFunkBody(
 		fmt.Sprintf(asmMacro,
 			l.popInt(),
-			l.currFunk().VarStack[right],
+			l.getVar(right),
 		),
 	)
 }

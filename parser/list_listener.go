@@ -29,6 +29,9 @@ type ListListener interface {
 	// EnterDeclaration is called when entering the Declaration production.
 	EnterDeclaration(c *DeclarationContext)
 
+	// EnterReturn is called when entering the Return production.
+	EnterReturn(c *ReturnContext)
+
 	// EnterSubAdd is called when entering the SubAdd production.
 	EnterSubAdd(c *SubAddContext)
 
@@ -59,6 +62,9 @@ type ListListener interface {
 	// EnterFuncDec is called when entering the funcDec production.
 	EnterFuncDec(c *FuncDecContext)
 
+	// EnterRet is called when entering the ret production.
+	EnterRet(c *RetContext)
+
 	// EnterExprList is called when entering the exprList production.
 	EnterExprList(c *ExprListContext)
 
@@ -85,6 +91,9 @@ type ListListener interface {
 
 	// ExitDeclaration is called when exiting the Declaration production.
 	ExitDeclaration(c *DeclarationContext)
+
+	// ExitReturn is called when exiting the Return production.
+	ExitReturn(c *ReturnContext)
 
 	// ExitSubAdd is called when exiting the SubAdd production.
 	ExitSubAdd(c *SubAddContext)
@@ -115,6 +124,9 @@ type ListListener interface {
 
 	// ExitFuncDec is called when exiting the funcDec production.
 	ExitFuncDec(c *FuncDecContext)
+
+	// ExitRet is called when exiting the ret production.
+	ExitRet(c *RetContext)
 
 	// ExitExprList is called when exiting the exprList production.
 	ExitExprList(c *ExprListContext)

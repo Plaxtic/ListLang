@@ -31,12 +31,9 @@ func listLen(listStr string) int {
 }
 
 func isList(listStr string) bool {
-	if len(listStr) > 1 &&
+	return len(listStr) > 1 &&
 		listStr[0] == '[' &&
-		listStr[len(listStr)-1] == ']' {
-		return true
-	}
-	return false
+		listStr[len(listStr)-1] == ']'
 }
 
 func isIdent(expr string) bool {
@@ -48,27 +45,21 @@ func isIdent(expr string) bool {
 	return true
 }
 
+func inAddrMap(name string, addrMap map[string]uint) bool {
+	_, ok := addrMap[name]
+	return ok
+}
+
 func (l *ListListener) inStack(name string) bool {
-	if _, ok := l.currFunk().VarStack[name]; ok {
-		return true
-	} else {
-		return false
-	}
+	return inAddrMap(name, l.currFunk().VarStack)
 }
 
 func (l *ListListener) inArgs(name string) bool {
-	if _, ok := l.currFunk().Args[name]; ok {
-		return true
-	} else {
-		return false
-	}
+	return inAddrMap(name, l.currFunk().Args)
 }
+
 func (l *ListListener) isVar(name string) bool {
-	if l.inStack(name) || l.inArgs(name) {
-		return true
-	} else {
-		return false
-	}
+	return l.inStack(name) || l.inArgs(name)
 }
 
 func (l *ListListener) getVar(name string) uint {

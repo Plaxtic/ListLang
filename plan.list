@@ -1,0 +1,58 @@
+
+// i want this to create a range 3-9
+range = [3..9]
+
+// i want this to create a range 3-9, * 2
+range = [a*2 <- 3..9]
+
+// i want this to create a range 3-9, * 2 if a%2
+range = [a%2 ? a*2 <- 3..9]
+
+// this is a function that you can send to
+// it will proccess every item and produce a new list
+// if there is no ret, there will be no item
+// not a gap, just a shorter list
+fn minifunk: a {
+    ret a+1
+}
+
+// only returns if a%2
+fn evennums: a {
+    ret a%2 ? a+1
+}
+
+// only works on zipped list of two items
+fn evennums: a, b {
+    ret a+b
+}
+
+// if you send to this it will operate on the whole list
+// always returns
+func normal_funk: list {
+    
+    // this is a pipe 
+    | <- list
+    | <- evennums 
+    minifunk
+}
+
+list <- list  // copies both lists and joins them
+fn   <- list  // produces a copy of the list modified iteratively by fn
+func <- list  // calls func with list as arg 1
+fd   <- list  // writes list data to file descriptor
+
+// saves copy of list modified iteratively by fn in var
+var = fn <- list
+
+// prints the list modified by fn to stdout
+Out <- itoa <- fn <- list 
+
+// stores processed input backwards in var
+// ! this might be bad/confusing !
+In -> atoi -> fn = var
+
+// zips lists
+var = list1 <> list2
+// e.g. [(1,2), (3,4), (5,6)] 
+
+

@@ -55,6 +55,7 @@ line
     | NL
     ;
 
+
 statExpr
     : state
     | expr
@@ -70,6 +71,7 @@ state
     : iterable (LSEND iterable)+ # SendLeft
     | iterable (RSEND iterable)+ # SendRight
     | funcDec                    # Declaration
+    | ret                        # Return
     ;
 
 
@@ -89,7 +91,7 @@ expr
     ;
 
 ops: (MUL|DIV|SUB|ADD|MOD);
-comment: '//' ().*? ;
+comment: '//'  ().*? ;
 
 args
     : exprList
@@ -97,6 +99,10 @@ args
 
 funcDec
     : FUNC IDENT COLON ( args )? LBRACK (NL (statExpr|comment)*)* RBRACK
+    ;
+
+ret
+    : 'ret' expr
     ;
 
 exprList

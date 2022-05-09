@@ -8,7 +8,13 @@ import (
 
 func (l *ListListener) sendRawList2Fd(send, recv string, direction rune) {
 	l.fillRawList(send)
-	l.addToFunkBody(fmt.Sprintf(Int2Arg2, fileDescriptors[recv]))
+
+	l.addToFunkBody(
+		fmt.Sprintf(
+			Int2Arg2,
+			fileDescriptors[recv],
+		),
+	)
 
 	switch direction {
 	case '<':
@@ -22,8 +28,18 @@ func (l *ListListener) sendRawList2Fd(send, recv string, direction rune) {
 }
 
 func (l *ListListener) sendVarList2Fd(send, recv string, direction rune) {
-	l.addToFunkBody(fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[send]))
-	l.addToFunkBody(fmt.Sprintf(Int2Arg2, fileDescriptors[recv]))
+	l.addToFunkBody(
+		fmt.Sprintf(
+			Addr2Arg1,
+			l.currFunk().VarStack[send],
+		),
+	)
+	l.addToFunkBody(
+		fmt.Sprintf(
+			Int2Arg2,
+			fileDescriptors[recv],
+		),
+	)
 
 	switch direction {
 	case '<':
@@ -38,18 +54,43 @@ func (l *ListListener) sendVarList2Fd(send, recv string, direction rune) {
 func (l *ListListener) sendRawList2List(send, recv string, direction rune) {
 	l.fillRawList(send)
 	l.addToFunkBody(
-		fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[recv]) +
-			Ret2Arg2 + JoinList +
-			fmt.Sprintf(SaveRet, l.currFunk().VarStack[recv]),
+		fmt.Sprintf(
+			Addr2Arg1,
+			l.currFunk().VarStack[recv],
+		),
+	)
+	l.addToFunkBody(
+		Ret2Arg2 +
+			JoinList,
+	)
+	l.addToFunkBody(
+		fmt.Sprintf(
+			SaveRet,
+			l.currFunk().VarStack[recv],
+		),
 	)
 }
 
 func (l *ListListener) sendVarList2List(send, recv string, direction rune) {
 	l.addToFunkBody(
-		fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[recv]) +
-			fmt.Sprintf(Addr2Arg2, l.currFunk().VarStack[send]) +
-			JoinList +
-			fmt.Sprintf(SaveRet, l.currFunk().VarStack[recv]),
+		fmt.Sprintf(
+			Addr2Arg1,
+			l.currFunk().VarStack[recv],
+		),
+	)
+
+	l.addToFunkBody(
+		fmt.Sprintf(
+			Addr2Arg2,
+			l.currFunk().VarStack[send],
+		),
+	)
+	l.addToFunkBody(
+		JoinList +
+			fmt.Sprintf(
+				SaveRet,
+				l.currFunk().VarStack[recv],
+			),
 	)
 }
 
