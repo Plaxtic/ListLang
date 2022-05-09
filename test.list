@@ -3,17 +3,21 @@ two   = [5]
 three = []
 four  = []
 five  = [1,2,3,4]
-nine  = [2, 5-10, 4, 5 ,6, 234, 324324, 1, 2,3,4,5,6]
+nine  = [2, 5-10, 4*2, 5 ,6, 123*234, 324324, 1, 2,3,4,5,6]
 test  = [1,4]
 
-fn newfunc: a, b {
-    
+fn minifunk: a {
+    a+1
 }
 
-five -> Out
-nine -> Out
+// bad, want to be immutable
+five <- test
+five <- nine
 
-Out <- nine <- two <- In
+one <- [5,5,6, 6]
 
-nine <- five
+Out <- five
+five -> Err
 
+Out <- one
+one -> Err

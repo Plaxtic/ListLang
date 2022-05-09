@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"test/parser"
+	"unicode"
 )
 
 type ListListener struct {
@@ -14,31 +15,16 @@ type ListListener struct {
 	IntStack  []int
 	FunkStack []string
 
-	VarStack  map[string]uint64
-	Funks     map[string]*StackFrame
-	StackSize uint64
-}
-
-type StackFrame struct {
-	AsmPrelude  string
-	AsmBody     string
-	AsmEpilogue string
+	Funks map[string]*StackFrame
 }
 
 func NewListListener() *ListListener {
 	newList := &ListListener{
-		VarStack:  make(map[string]uint64),
-		Funks:     make(map[string]*StackFrame),
-		StackSize: RetAndRpb,
+		Funks: make(map[string]*StackFrame),
 	}
 	newList.initFunk("main")
 
 	return newList
-}
-
-func (l *ListListener) initFunk(funk string) {
-	l.Funks[funk] = &StackFrame{}
-	l.pushFunk("main")
 }
 
 func (l *ListListener) topOfStack() int { return l.IntStack[len(l.IntStack)-1] }
@@ -55,16 +41,35 @@ func (l *ListListener) pop() (ret int) {
 	return ret
 }
 
-func (l *ListListener) topOfFunkStack() string { return l.FunkStack[len(l.FunkStack)-1] }
-func (l *ListListener) decFunkStack()          { l.FunkStack = l.FunkStack[:len(l.FunkStack)-1] }
-func (l *ListListener) pushFunk(name string)   { l.FunkStack = append(l.FunkStack, name) }
-
-func (l *ListListener) addToFunkBody(asm string) {
-	l.Funks[l.topOfFunkStack()].AsmBody += asm
+func (l *ListListener) inStack(name string) bool {
+	if _, ok := l.currFunk().VarStack[name]; ok {
+		return true
+	} else {
+		return false
+	}
 }
 
-func (l *ListListener) inStack(name string) bool {
-	if _, ok := l.VarStack[name]; ok {
+func (l *ListListener) inArgs(name string) bool {
+	if _, ok := l.currFunk().Args[name]; ok {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (l *ListListener) getVar(name string) uint {
+	if l.inStack(name) {
+		return l.currFunk().VarStack[name]
+	} else if l.inArgs(name) {
+		return l.currFunk().Args[name]
+	} else {
+		log.Panicf("Undeclared identifier '%s'", name)
+		return 0
+	}
+}
+
+func (l *ListListener) isVar(name string) bool {
+	if l.inStack(name) || l.inArgs(name) {
 		return true
 	} else {
 		return false
@@ -76,19 +81,22 @@ func (l *ListListener) addVarToStack(name string) {
 		// reassign, free if orphan pointer
 		// TODO
 	} else {
-		l.VarStack[name] = uint64(l.StackSize)
-		l.StackSize += QWordSize
+		l.currFunk().VarStack[name] = l.currFunk().StackSize
+		l.currFunk().StackSize += QWordSize
 	}
-}
-
-func (l *ListListener) initializeList(name string) {
-	l.addToFunkBody(
-		fmt.Sprintf(ListInit, l.VarStack[name], name),
-	)
 }
 
 func listLen(listStr string) int {
 	return strings.Count(listStr, ",")
+}
+
+func isList(listStr string) bool {
+	if len(listStr) > 1 &&
+		listStr[0] == '[' &&
+		listStr[len(listStr)-1] == ']' {
+		return true
+	}
+	return false
 }
 
 func (l *ListListener) appendIntStack(numItems int) {
@@ -102,40 +110,37 @@ func (l *ListListener) appendIntStack(numItems int) {
 	)
 }
 
-func (l *ListListener) fillList(name string, list parser.IListTypeContext) {
-	if list.GetText() == "[]" {
-		return
-	} else {
+func (l *ListListener) fillListVar(name, listStr string) {
+	if listStr != "[]" {
 		l.addToFunkBody(
-			fmt.Sprintf(Addr2Arg1, l.VarStack[name]),
+			fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[name]),
 		)
-		l.appendIntStack(listLen(list.GetText()))
+		l.appendIntStack(listLen(listStr))
 		l.addToFunkBody(
-			fmt.Sprintf(SaveRet, l.VarStack[name]),
+			fmt.Sprintf(SaveRet, l.currFunk().VarStack[name]),
 		)
 	}
 }
 
+// leaves reference in rax and rdi
+func (l *ListListener) fillRawList(listStr string) {
+	l.addToFunkBody(ListInit + Ret2Arg1)
+
+	if listStr != "[]" {
+		l.appendIntStack(listLen(listStr))
+	}
+}
+
 func (l *ListListener) ExitAssign(c *parser.AssignContext) {
-	//	fmt.Println("ExitAssign")
-
 	name := c.IDENT().GetText()
+
 	l.addVarToStack(name)
-	l.initializeList(name)
-	l.fillList(name, c.ListType())
-}
+	l.addToFunkBody(ListInit)
+	l.addToFunkBody(
+		fmt.Sprintf(SaveRet, l.currFunk().VarStack[name]),
+	)
 
-func (l *ListListener) EnterFuncDec(c *parser.FuncDecContext) {
-	fmt.Println("EnterDeclaration")
-
-	funk := c.IDENT().GetText()
-	fmt.Printf("fn: %s\n", funk)
-
-	l.initFunk(funk)
-}
-
-func (l *ListListener) ExitFuncDec(c *parser.FuncDecContext) {
-	l.decFunkStack()
+	l.fillListVar(name, c.ListType().GetText())
 }
 
 func (l *ListListener) printList(ident string) {
@@ -143,70 +148,21 @@ func (l *ListListener) printList(ident string) {
 		log.Panicf("Unknown identifier '%s'\n", ident)
 	} else {
 		l.addToFunkBody(
-			fmt.Sprintf(Addr2Arg1, l.VarStack[ident]) +
+			fmt.Sprintf(Addr2Arg1, l.currFunk().VarStack[ident]) +
 				PrintList,
 		)
 	}
 }
 
-func (l *ListListener) sendListOut(send string, recv string, direction rune) {
-	if !l.inStack(send) {
-		log.Panicf("Unknown identifier '%s'\n", send)
-	} else {
-		l.addToFunkBody(
-			fmt.Sprintf(Addr2Arg1, l.VarStack[send]) +
-				fmt.Sprintf(Int2Arg2, fileDescriptors[recv]),
-		)
-
-		switch direction {
-		case '<':
-			l.addToFunkBody(SendListL)
-		case '>':
-			l.addToFunkBody(SendListR)
-		default:
-			log.Panic("Unrecognized direction %c\n", direction)
-		}
-	}
-}
-
-func (l *ListListener) Send(send, recv string, direction rune) {
-	if isFdMacro(recv) {
-		switch fileDescriptors[recv] {
-		case StdOut:
-			l.sendListOut(send, recv, direction)
-		default:
-			fmt.Printf("%s not implemented\n", recv)
-		}
-	}
-}
-
-func (l *ListListener) ExitSendLeft(c *parser.SendLeftContext) {
-	fmt.Println("ExitSendLeft")
-
-	nId := len(c.AllIterable()) - 1
-	for ; nId >= 0; nId-- {
-		id := c.Iterable(nId)
-		fmt.Printf("\titer: %s\n", id.GetText())
-	}
-	recv, send := c.Iterable(0).GetText(), c.Iterable(1).GetText()
-	l.Send(send, recv, '<')
-}
-
-func (l *ListListener) ExitSendRight(c *parser.SendRightContext) {
-	//	fmt.Println("ExitSendRight")
-
-	send, recv := c.Iterable(0).GetText(), c.Iterable(1).GetText()
-	l.Send(send, recv, '>')
-}
-
 func (l *ListListener) ExitStart(c *parser.StartContext) {
-	l.Funks["main"].AsmPrelude = fmt.Sprintf(Prelude, l.StackSize)
+	main := l.Funks["main"]
+	main.AsmPrelude = fmt.Sprintf(Prelude, l.currFunk().StackSize)
 
-	for _, a := range l.VarStack {
-		l.Funks["main"].AsmEpilogue += fmt.Sprintf(Addr2Arg1, a)
-		l.Funks["main"].AsmEpilogue += FreeLists
+	for _, a := range main.VarStack {
+		main.AsmEpilogue += fmt.Sprintf(Addr2Arg1, a)
+		main.AsmEpilogue += FreeLists
 	}
-	l.Funks["main"].AsmEpilogue += End
+	main.AsmEpilogue += End
 }
 
 func (l *ListListener) GetAsm() (fullAsm string) {
@@ -218,37 +174,157 @@ func (l *ListListener) GetAsm() (fullAsm string) {
 	return fullAsm
 }
 
-// ONLY WORKS FOR CONSTANT VALUES
-func (l *ListListener) ExitMulDiv(c *parser.MulDivContext) {
-	//	fmt.Println("EnterCalc")
+func isIdent(expr string) bool {
+	for _, l := range expr {
+		if !unicode.IsLetter(l) {
+			return false
+		}
+	}
+	return true
+}
+
+func (l *ListListener) ExitMulDivMod(c *parser.MulDivModContext) {
+	opType := c.GetOp().GetTokenType()
+	validateCalcType(c.GetOp().GetText(), c.GetOp().GetTokenType())
+
+	l.Calc(
+		c.Expr(0).GetText(),
+		c.Expr(1).GetText(),
+		opType,
+	)
+}
+
+func (l *ListListener) ExitSubAdd(c *parser.SubAddContext) {
+	opType := c.GetOp().GetTokenType()
+	validateCalcType(c.GetOp().GetText(), opType)
+
+	l.Calc(
+		c.Expr(0).GetText(),
+		c.Expr(1).GetText(),
+		opType,
+	)
+}
+
+func validateCalcType(op string, opType int) {
+	switch opType {
+	case parser.ListParserMUL:
+	case parser.ListParserDIV:
+	case parser.ListParserADD:
+	case parser.ListParserSUB:
+	default:
+		log.Panicf("Unexpected op: %s\n", op)
+	}
+}
+
+func (l *ListListener) Calc(left, right string, opType int) {
+
+	isIdentL, isIdentR := isIdent(left), isIdent(right)
+	switch true {
+	case isIdentL && isIdentR:
+		if !l.isVar(left) {
+			// TODO
+		} else if !l.isVar(right) {
+			// TODO
+		} else {
+			l.bothVarMulDiv(left, right, opType)
+		}
+	case isIdentL:
+		if !l.isVar(left) {
+			fmt.Println(left, right)
+			// TODO
+		} else {
+			l.leftVarMulDiv(left, opType)
+		}
+	case isIdentR:
+		if !l.isVar(right) {
+			// TODO
+		} else {
+			l.leftVarMulDiv(right, opType)
+		}
+	default:
+		l.constMulDiv(opType)
+	}
+}
+
+func (l *ListListener) bothVarMulDiv(left, right string, opType int) {
+
+	var asmMacro string
+	switch opType {
+	case parser.ListParserMUL:
+		asmMacro = MulTwoVar
+	case parser.ListParserDIV:
+		asmMacro = DivTwoVar
+	case parser.ListParserADD:
+		asmMacro = AddTwoVar
+	case parser.ListParserSUB:
+		asmMacro = SubTwoVar
+	}
+	l.addToFunkBody(
+		fmt.Sprintf(asmMacro,
+			l.getVar(left),
+			l.getVar(right),
+		),
+	)
+}
+
+func (l *ListListener) leftVarMulDiv(left string, opType int) {
+
+	var asmMacro string
+	switch opType {
+	case parser.ListParserMUL:
+		asmMacro = MulOneVarLeft
+	case parser.ListParserDIV:
+		asmMacro = DivOneVarLeft
+	case parser.ListParserADD:
+		asmMacro = AddOneVarLeft
+	case parser.ListParserSUB:
+		asmMacro = SubOneVarLeft
+	}
+	l.addToFunkBody(
+		fmt.Sprintf(asmMacro,
+			l.currFunk().VarStack[left],
+			l.pop(),
+		),
+	)
+}
+
+func (l *ListListener) rightVarMulDiv(right string, opType int) {
+
+	var asmMacro string
+	switch opType {
+	case parser.ListParserMUL:
+		asmMacro = MulOneVarRight
+	case parser.ListParserDIV:
+		asmMacro = DivOneVarRight
+	case parser.ListParserADD:
+		asmMacro = AddOneVarRight
+	case parser.ListParserSUB:
+		asmMacro = SubOneVarRight
+	}
+	l.addToFunkBody(
+		fmt.Sprintf(asmMacro,
+			l.pop(),
+			l.currFunk().VarStack[right],
+		),
+	)
+}
+
+func (l *ListListener) constMulDiv(opType int) {
 	right, left := l.pop(), l.pop()
 
-	switch c.GetOp().GetTokenType() {
+	switch opType {
 	case parser.ListParserMUL:
 		l.push(left * right)
 	case parser.ListParserDIV:
 		l.push(left / right)
-	default:
-		log.Panicf("Unexpected op: %s\n", c.GetOp().GetText())
-	}
-}
-
-func (l *ListListener) ExitSubAdd(c *parser.SubAddContext) {
-	//	fmt.Println("EnterCalc")
-	right, left := l.pop(), l.pop()
-
-	switch c.GetOp().GetTokenType() {
 	case parser.ListParserADD:
 		l.push(left + right)
 	case parser.ListParserSUB:
 		l.push(left - right)
-	default:
-		log.Panicf("Unexpected op: %s\n", c.GetOp().GetText())
 	}
 }
 
 func (l *ListListener) EnterNumber(c *parser.NumberContext) {
-	//	fmt.Println("EnterNumber")
 	i, err := strconv.Atoi(c.GetText())
 	HandleErr(err)
 	l.push(i)
@@ -258,11 +334,4 @@ func HandleErr(err error) {
 	if err != nil {
 		log.Panic(err)
 	}
-}
-
-func (l *ListListener) ExitExprList(c *parser.ExprListContext) {
-	/*	fmt.Println("ExitExprList")
-		for _, e := range c.AllExpr() {
-			fmt.Printf("e: %s\n", e.GetText())
-		} */
 }

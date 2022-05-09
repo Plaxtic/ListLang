@@ -14,6 +14,7 @@ COMMA:  ',';
 QMARK:  '?';
 COLON:  ':';
 QUOTE:  '"';
+MOD:    '%';
 
 LSQUARE: '[';
 RSQUARE: ']';
@@ -28,6 +29,8 @@ LTE:   '<=';
 GTE:   '>=';
 LSEND: '<-';
 RSEND: '->';
+
+COMMENT: '//';
 
 TRUE:  'true';
 FALSE: 'false';
@@ -48,6 +51,7 @@ start
 
 line
     : statExpr*
+    | comment
     | NL
     ;
 
@@ -68,8 +72,9 @@ state
     | funcDec                    # Declaration
     ;
 
+
 expr
-    : expr op=(MUL|DIV) expr         # MulDiv
+    : expr op=(MUL|DIV|MOD) expr     # MulDivMod
     | expr op=(SUB|ADD) expr         # SubAdd
     | expr op=(EQ|N_EQ|LTE|GTE) expr # Cond
     | INT                            # Number 
@@ -83,8 +88,15 @@ expr
 //    | expr QMARK expr COLON expr     # Cond
     ;
 
+ops: (MUL|DIV|SUB|ADD|MOD);
+comment: '//' ().*? ;         // shite
+
+args
+    : exprList
+    ;
+
 funcDec
-    : FUNC IDENT COLON ( exprList )? LBRACK (NL (statExpr)*)* RBRACK
+    : FUNC IDENT COLON ( args )? LBRACK (NL (statExpr|comment)*)* RBRACK
     ;
 
 exprList

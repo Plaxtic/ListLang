@@ -304,6 +304,50 @@ list_copy_ret:
     ret
 
 
+;; IMPLEMENT MULTIPLE ARGS LATER
+;; struct list *list_iterate(struct list *l, void func())
+list_iterate:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 0x8
+
+    push rdi
+    push rsi
+    push r8
+
+    call list
+    test rax, rax
+    jz list_iterate_ret
+    mov [rbp], rax
+
+    mov r8, rdi
+    mov rcx, [rdi]
+
+list_iterate_loop:
+    add r8, 8
+    mov rdi, [r8]
+    call rsi
+
+    mov rdi, [rbp]
+    mov rsi, rax
+    call list_append
+    test rax, rax
+    jz list_iterate_ret
+    mov [rbp], rax
+
+list_iterate_call:
+    loop list_iterate_loop
+    mov rax, [rbp]
+
+list_iterate_ret:
+    pop r8
+    pop rsi
+    pop rdi
+
+    leave
+    ret
+
+
 ; int list_count(struct list *l, int value)
 list_count:
     push rdi
@@ -329,9 +373,43 @@ list_count_not_matching:
     ret
 
 
+;; struct list *list_join(struct list *l1, struct list *l2)
+list_join:
+    push rdi
+    push rsi
+    push rcx
+    push r8
+    push r9
+
+    mov r8, rsi
+    mov rcx, [rsi]
+
+list_join_loop:
+    add r8, 8
+    mov rsi, [r8]
+
+    push rcx
+    call list_append
+    pop rcx
+
+    test rax, rax
+    jz list_join_ret
+    mov rdi, rax
+
+    loop list_join_loop
+    mov rax, rdi
+
+list_join_ret:
+    pop r9
+    pop r8
+    pop rcx
+    pop rsi
+    pop rdi
+    ret
+
+
 ;; int mod_by_idx(struct list *l, int idx, int val)
 mod_by_idx:
-
     xor rax, rax
     cmp rsi, [rdi]
     jg mod_by_idx_fail

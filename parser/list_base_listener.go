@@ -69,6 +69,12 @@ func (s *BaseListListener) EnterSubAdd(ctx *SubAddContext) {}
 // ExitSubAdd is called when production SubAdd is exited.
 func (s *BaseListListener) ExitSubAdd(ctx *SubAddContext) {}
 
+// EnterMulDivMod is called when production MulDivMod is entered.
+func (s *BaseListListener) EnterMulDivMod(ctx *MulDivModContext) {}
+
+// ExitMulDivMod is called when production MulDivMod is exited.
+func (s *BaseListListener) ExitMulDivMod(ctx *MulDivModContext) {}
+
 // EnterCond is called when production Cond is entered.
 func (s *BaseListListener) EnterCond(ctx *CondContext) {}
 
@@ -87,17 +93,29 @@ func (s *BaseListListener) EnterNumber(ctx *NumberContext) {}
 // ExitNumber is called when production Number is exited.
 func (s *BaseListListener) ExitNumber(ctx *NumberContext) {}
 
-// EnterMulDiv is called when production MulDiv is entered.
-func (s *BaseListListener) EnterMulDiv(ctx *MulDivContext) {}
-
-// ExitMulDiv is called when production MulDiv is exited.
-func (s *BaseListListener) ExitMulDiv(ctx *MulDivContext) {}
-
 // EnterAssign is called when production Assign is entered.
 func (s *BaseListListener) EnterAssign(ctx *AssignContext) {}
 
 // ExitAssign is called when production Assign is exited.
 func (s *BaseListListener) ExitAssign(ctx *AssignContext) {}
+
+// EnterOps is called when production ops is entered.
+func (s *BaseListListener) EnterOps(ctx *OpsContext) {}
+
+// ExitOps is called when production ops is exited.
+func (s *BaseListListener) ExitOps(ctx *OpsContext) {}
+
+// EnterComment is called when production comment is entered.
+func (s *BaseListListener) EnterComment(ctx *CommentContext) {}
+
+// ExitComment is called when production comment is exited.
+func (s *BaseListListener) ExitComment(ctx *CommentContext) {}
+
+// EnterArgs is called when production args is entered.
+func (s *BaseListListener) EnterArgs(ctx *ArgsContext) {}
+
+// ExitArgs is called when production args is exited.
+func (s *BaseListListener) ExitArgs(ctx *ArgsContext) {}
 
 // EnterFuncDec is called when production funcDec is entered.
 func (s *BaseListListener) EnterFuncDec(ctx *FuncDecContext) {}

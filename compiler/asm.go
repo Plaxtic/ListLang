@@ -25,19 +25,80 @@ main:
     mov rbp, rsp
     sub rsp, %#x
     `
+	FnPrelude = `
+%s:
+    push rbp
+    mov rbp, rsp
+    sub rsp, %#x
+	`
 	End = `
     xor rax, rax
     leave
     ret
 `
-	ListInit = `
-    call list
-    mov [rbp + %#x], rax		; %s
-    `
+	DivTwoVar = `
+	mov rax, [rbp + %#x]
+	mov r8, [rbp + %#x]
+	div r8
+	`
+	DivOneVarLeft = `
+	mov rax, %#x
+	mov r8, [rbp + %#x]
+	div r8
+	`
+	DivOneVarRight = `
+	mov rax, [rbp + %#x]
+	mov r8, %#x
+	div r8
+	`
+	MulTwoVar = `
+	mov rax, [rbp + %#x]
+	imul rax, [rbp + %#x]
+	`
+	MulOneVarRight = `
+	mov rax, %#x
+	imul rax, [rbp + %#x]
+	`
+	MulOneVarLeft = `
+	mov rax, [rbp + %#x]
+	imul rax, %#x
+	`
+	AddTwoVar = `
+	mov rax, [rbp + %#x]
+	add rax, [rbp + %#x]
+	`
+	AddOneVarRight = `
+	mov rax, %#x
+	add rax, [rbp + %#x]
+	`
+	AddOneVarLeft = `
+	mov rax, [rbp + %#x]
+	add rax, %#x
+	`
+	SubTwoVar = `
+	mov rax, [rbp + %#x]
+	sub rax, [rbp + %#x]
+	`
+	SubOneVarRight = `
+	mov rax, %#x
+	sub rax, [rbp + %#x]
+	`
+	SubOneVarLeft = `
+	mov rax, [rbp + %#x]
+	sub rax, %#x
+	`
+	ListInit = `call list
+	`
 	Addr2Arg1 = `mov rdi, [rbp + %#x]
+    `
+	Addr2Arg2 = `mov rsi, [rbp + %#x]
     `
 	Int2Arg2 = `mov rsi, %#x
     `
+	Ret2Arg1 = `mov rdi, rax
+	`
+	Ret2Arg2 = `mov rsi, rax
+	`
 	SaveRet = `mov [rbp + %#x], rax
     `
 	AppendList = `
@@ -53,6 +114,9 @@ main:
     `
 	SendListR = `call list_send_fd_R
     `
+	JoinList = `call list_join
+	`
+
 	StdIn  = 0
 	StdOut = 1
 	StdErr = 2
